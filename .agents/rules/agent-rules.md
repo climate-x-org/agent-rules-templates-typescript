@@ -1,18 +1,13 @@
----
-description: Cursor-specific agent guidance (supplements AGENTS.md)
-alwaysApply: true
----
+# agent-rules Engineering Antigravity Guidance
 
-# agent-rules Engineering Cursor Guidance
-
-Provider target: Cursor
+Provider target: Antigravity
 
 This file supplements `AGENTS.md` with provider-specific configuration.
 Full engineering guidance (base rules, workflow contract, task recipes,
 verification checklist) is defined in `AGENTS.md`.
 
 ## Provider Configuration
-- Agent directory: `.cursor/agents`
+- Agent directory: `.agents/skills`
 - Workflow agents: `plan-agent`, `coach-agent`, `build-agent`, `debug-agent`
 
 ## Workflow Chain

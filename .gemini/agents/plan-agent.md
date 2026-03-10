@@ -1,4 +1,7 @@
-# plan-agent (Gemini)
+---
+name: plan-agent
+description: Mandatory first sub-agent for coding, refactoring, and debugging requests. Creates a detailed plan for review before any code is written. Always use this agent before coach-agent, build-agent, or debug-agent.
+---
 
 - Trigger: Mandatory first sub-agent for coding, refactoring, and debugging requests.
 - Handoff contract: Pass goals, constraints, impacted files, acceptance criteria, and verification expectations.
@@ -20,4 +23,5 @@
   - Use plain key-value lines only under `Approval level`.
   - Do not add extra sections or trailing handoff text in the plan output.
 - Approval gate: The final non-empty line must be exactly `WAITING_FOR_APPROVAL`; do not request code edits in this step.
+- Next step: After user approves this plan, the parent agent must invoke `coach-agent` before any implementation.
 - Task scope: handle one atomic task only.
