@@ -1,7 +1,10 @@
+<!-- agent-rules@0_3_0 objective=general language=typescript strictness=balanced repo_name=agent-rules_Engineering -->
 ---
 description: Cursor-specific agent guidance (supplements AGENTS.md)
 alwaysApply: true
 ---
+
+<!-- agent-rules@0_3_0 objective=general language=typescript strictness=balanced repo_name=agent-rules_Engineering -->
 
 # agent-rules Engineering Cursor Guidance
 

@@ -1,6 +1,11 @@
+<!-- agent-rules@0_3_0 objective=general language=typescript strictness=balanced repo_name=agent-rules_Engineering -->
+
 # agent-rules Engineering Agent Guidance
 
 Provider target: Universal
+
+## Primary objective
+- Prioritize clear, maintainable implementations over clever shortcuts.
 
 ## Enforceable Boundaries
 - Host runtime controls context windows, memory compaction, and tool execution semantics.
@@ -9,9 +14,9 @@ Provider target: Universal
 
 ## Sub-Agent Workflow Contract
 - Delegate through provider agents in `.<provider>/agents` using this baseline order: `plan-agent -> approval -> coach-agent -> build-agent/debug-agent -> verify -> handoff`.
-- Plan output must declare `Approval level` as integer `1`, `2`, or `3`.
+- Plan output must declare `Approval level` as integer `1`, `2`, `3`, or `4`.
 - When host Plan Mode is available, `plan-agent` must use one `<proposed_plan>` block; otherwise use compact fallback headings: `Summary`, `Key Changes`, `Test Plan`, `Assumptions`, `Approval level`.
-- `Approval level` policy: `1` = baseline flow; `2` = extra approval after `coach-agent`; `3` = approval after each atomic `build-agent`/`debug-agent` step.
+- `Approval level` policy: `1` = baseline flow; `2` = extra approval after `coach-agent`; `3` = approval after each atomic `build-agent`/`debug-agent` step; `4` = decomposition-aware, plan must include structured steps, parent uses step dependencies and parallelizable flags to invoke multiple `build-agent` instances.
 - For code-change requests, invoke `plan-agent` first and return only plan output until user approval.
 - After user approval, invoke `coach-agent` and surface missing risks/tests; proceed only on coach GO.
 - Before implementation, confirm all approvals required by declared `Approval level` are satisfied.
@@ -19,6 +24,11 @@ Provider target: Universal
 - After implementation, run `verify` for required checks and then `handoff` with outcomes and next steps.
 - `verify` and `handoff` are process steps, not additional sub-agents.
 - Do not mutate files before plan approval and coach GO are both satisfied.
+
+## Agent Concurrency
+- Run agents sequentially: plan → coach → build/debug. Do not launch multiple `build-agent` or `debug-agent` tasks in parallel.
+- Parallel sub-agents multiply memory (each carries its own context window). Prefer one active build/debug agent at a time.
+- See [agent-memory.md](https://github.com/climate-x-org/agent-rules/blob/main/docs/agent-memory.md) for full memory-management guidance.
 
 ## Base Rules
 - Use shared `tsconfig.json` bases where feasible (e.g., `@tsconfig/recommended`, `@tsconfig/strictest`, `@tsconfig/nodeXX`).
@@ -85,6 +95,7 @@ Provider target: Universal
 - Respect plan-declared `Approval level` checkpoints before running `build-agent`.
 - Delegate third to `build-agent` with approved plan steps and acceptance criteria.
 - If `Approval level` is `3`, execute one atomic build step per approval cycle.
+- If `Approval level` is `4`, use structured plan steps to invoke `build-agent` per step or parallel group; respect step dependencies and run `verify`/`handoff` after all steps complete.
 - Run `verify` with required lint/type/test checks before completion.
 - End with `handoff` summarizing changes, evidence, and next steps.
 
@@ -94,6 +105,7 @@ Provider target: Universal
 - Respect plan-declared `Approval level` checkpoints before running `debug-agent`.
 - Delegate to `debug-agent` for root cause, minimal fix, and regression checks.
 - If `Approval level` is `3`, execute one atomic debug step per approval cycle.
+- If `Approval level` is `4`, use structured plan steps to invoke `debug-agent` per step or parallel group; respect step dependencies.
 - Run `verify` and provide `handoff` with root cause, fix, and regression evidence.
 
 ### Refactoring

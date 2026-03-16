@@ -1,3 +1,5 @@
+<!-- agent-rules@0_3_0 objective=general language=typescript strictness=balanced repo_name=agent-rules_Engineering -->
+
 # agent-rules Engineering Antigravity Guidance
 
 Provider target: Antigravity
